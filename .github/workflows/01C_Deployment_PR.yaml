@@ -1,13 +1,13 @@
 name: Deployment 01C - PR Trigger Workflow
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches:
-      - dev_1
-
 # on:
-#   workflow_dispatch:
+#   pull_request:
+#     types: [opened, synchronize, reopened]
+#     branches:
+#       - dev_1
+
+on:
+  workflow_dispatch:
 
 jobs:
 
