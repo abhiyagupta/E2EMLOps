@@ -216,3 +216,4 @@ cython_debug/
 
 # ignore gitpod 
 .gitpod.yml
+/.gitpod
