@@ -212,7 +212,7 @@ jobs:
             ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest \
             /bin/bash -c "
               nvidia-smi
-              dvc pull -r myremote && \
+              dvc pull -r mlops && \
               dvc repro -f
               python src/backend/torch_local/transfer_mar.py -p dev 
             "
@@ -223,7 +223,7 @@ jobs:
           mkdir -p output_prod
           for project in sports vegfruits; do
             aws s3 cp \
-              s3://mybucket-emlo-mumbai/kserve-ig/${project}-classifier-prod/output_${project}.txt \
+              s3://abhiya-mlops-project/kserve-ig/${project}-classifier-prod/output_${project}.txt \
               output_prod/output_${project}.txt
           done
 
