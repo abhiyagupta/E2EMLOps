@@ -82,6 +82,8 @@ def load_model(name):
     print(f"Loading model: {name}")
     
     path = f"{name}/{name}_cpu.pt"
+    
+
     try:
         if not os.path.exists(path):
             print(f"ERROR: Model file not found at {path}")
@@ -103,6 +105,8 @@ def load_model(name):
 def load_classnames(name):
     print(f"Loading class mappings for: {name}")
     file_path = f"{name}/index_to_name.json"
+    
+    
     try:
         if not os.path.exists(file_path):
             print(f"ERROR: Class mapping file not found at {file_path}")

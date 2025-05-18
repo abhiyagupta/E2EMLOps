@@ -65,7 +65,8 @@ aws configure
 
 7. first run manually from local to push train prod and dev model to s3.
 - launch instance
-- spot, configrations: request type-persistent, interuption behavious: stop
+- purchasing: spot
+- custmize spot instance: request type-persistent, interuption behavious: stop
 - start ec2 - g4dn x large
 - image: ami-01654480b8a1994bd
 - size -128 GB
@@ -85,8 +86,13 @@ pip install -r requirements.gpu.txt
 
 check DVC configuration:
 ```
+dvc init
 dvc remote list 
-aws s3 ls
+aws s3 ls 
+```
+- this will create dvc config file
+```
+dvc remote add -d mlops s3://abhiya-mlops-project/data
 ```
 NOTE: make sure raw data is stored under data/processed/sports and data/processed/vegfruits folder
 data path sports: https://www.kaggle.com/datasets/gpiosenka/sports-classification
@@ -97,7 +103,7 @@ dvc add .\data\processed\vegfruits\
 dvc add .\data\processed\sports\
 dvc push
 ```
-delete raw data - delete sports and vegfruits folder, but keep sprts.dc and vegfruits.dvc files created.
+delete raw data - delete sports and vegfruits folder, but keep sports.dc and vegfruits.dvc files created.
 testing on local, this should pull data from s3: 
 ```
 dvc pull - r mlops  
