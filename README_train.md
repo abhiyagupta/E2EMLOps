@@ -70,8 +70,18 @@ aws configure
 - image: ami-01654480b8a1994bd
 - size -128 GB
 - configure vs code to ec2
+- follow the commands below in ec2 machine
 
-8.  DVC Configuration (first time local)
+8. 
+```
+git clone https://github.com/abhiyagupta/E2EMLOps.git
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.gpu.txt 
+```
+
+
+9.  DVC Configuration (first time local)
 
 check DVC configuration:
 ```
@@ -97,9 +107,16 @@ dvc pull - r mlops
 ```
 dvc repro -f
 ```
-9. Running on git actions:
+
+9. manully first save models to s3 : prod and dev mode
+```
+python src/backend/torch_local/transfer_mar.py -p prod
+python src/backend/torch_local/transfer_mar.py -p dev
+```
+
+10. Running on git actions:
 - go to git actions
-- start workflwo for train.yaml
+- start workflow for ".github\workflows\01C_Deployment_PR.yaml"
 - this will create an image, push to ECR
 - start ec2 spot instance
 - will pull data from s3
