@@ -167,8 +167,6 @@ def main(cfg: DictConfig):
                 os.remove(cpu_model_file_path)
             torch.jit.save(cpu_scripted_model, cpu_model_file_path)
             print(f"torch script model saved: {cpu_model_file_path=}")
-            
-            
 
         onnx_model_file_path:str = os.path.join( f"{cfg.paths.root_dir}","checkpoints","onnxs", f"{cfg.name}.onnx" )
         print(onnx_model_file_path)
@@ -176,8 +174,26 @@ def main(cfg: DictConfig):
             print("removing old onnx files!!")
             os.remove(onnx_model_file_path)
 
-        model.to_onnx(file_path=onnx_model_file_path,input_sample=imgs, export_params=True,verbose=True, dynamic_axes={'input': {0: 'batch'}},input_names=['input'],output_names=['output'])
+        model.to_onnx(file_path=onnx_model_file_path, verbose=False, input_sample=imgs, export_params=True, dynamic_axes={'input': {0: 'batch'}},input_names=['input'],output_names=['output'])
         print(f"onnx model saved: {onnx_model_file_path}")
+
+    dataset_name = cfg["data"]["data_dir"].split("/")[-2]
+    print(f"Dataset name - {dataset_name}")
+
+    # Dynamic variables
+    # name = "vegfruits"
+    accuracy = test_metrics[0].get('test/acc_epoch')
+
+    # File path
+    filename = f"output_{dataset_name}.txt"
+
+    # Optional: Delete the file if it exists
+    if os.path.exists(filename):
+        os.remove(filename)
+
+    # Create a new file and write the dynamic content
+    with open(filename, "w") as f:
+        f.write(f"{dataset_name}_accuracy={accuracy}\n")
 
     # Return Float for Hparams ::returning train_loss for optuna to compare 'test/acc_epoch','test/loss_epoch'
     # test_metrics =  [ { 'test/loss_epoch':?? , 'test/acc_epoch': ?? } ]

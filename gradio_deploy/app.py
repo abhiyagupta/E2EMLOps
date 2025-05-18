@@ -31,16 +31,17 @@ except Exception as e:
 # --- Download from S3 (CPU models only) ---
 def download_from_s3():
     print("Attempting to download artifacts from S3...")
-    BUCKET_NAME = 'abhiya-mlops-project'
+    BUCKET_NAME = 'mybucket-emlo-mumbai'
     ARTIFACTS = [
-        'checkpoints/pths/sports_cpu.pt',
-        'checkpoints/pths/vegfruits_cpu.pt',
-        'checkpoints/classnames/sports.json',
-        'checkpoints/classnames/vegfruits.json'
+        'kserve-ig/vegfruits-classifier-prod/pths/vegfruits_cpu.pt',
+        'kserve-ig/sports-classifier-prod/pths/sports_cpu.pt',
+
+        'kserve-ig/vegfruits-classifier-prod/index_to_name.json',
+        'kserve-ig/sports-classifier-prod/index_to_name.json',
     ]
-    os.makedirs("checkpoints/pths", exist_ok=True)
-    os.makedirs("checkpoints/classnames", exist_ok=True)
-    
+    os.makedirs("vegfruits", exist_ok=True)
+    os.makedirs("sports", exist_ok=True)
+
     try:
         aws_key = os.getenv("AWS_ACCESS_KEY_ID")
         aws_secret = os.getenv("AWS_SECRET_ACCESS_KEY")
@@ -52,12 +53,16 @@ def download_from_s3():
             aws_secret_access_key=aws_secret,
             region_name="ap-south-1"
         )
-        
+
         for artifact in ARTIFACTS:
             if not os.path.exists(artifact):
-                print(f"Downloading {artifact}")
-                s3.download_file(BUCKET_NAME, artifact, artifact)
-                print(f"Successfully downloaded {artifact}")
+                artifact_extract = artifact.split("/")[-1]
+                if "vegfruits" in artifact:
+                    local_name = "vegfruits"
+                if "sports" in artifact:
+                    local_name = "sports"
+                s3.download_file(BUCKET_NAME, artifact, os.path.join(local_name, artifact_extract))
+                print(f"Successfully downloaded {artifact} as {os.path.join(local_name, artifact_extract)}")
             else:
                 print(f"{artifact} already exists, skipping download")
     except Exception as e:
@@ -75,7 +80,8 @@ transform = transforms.Compose([
 # --- Load models ---
 def load_model(name):
     print(f"Loading model: {name}")
-    path = f"checkpoints/pths/{name}_cpu.pt"
+    # mybucket-emlo-mumbai/kserve-ig/vegfruits-classifier-prod/pths/
+    path = f"{name}/{name}_cpu.pt"
     try:
         if not os.path.exists(path):
             print(f"ERROR: Model file not found at {path}")
@@ -96,7 +102,7 @@ def load_model(name):
 # --- Load class mappings ---
 def load_classnames(name):
     print(f"Loading class mappings for: {name}")
-    file_path = f"checkpoints/classnames/{name}.json"
+    file_path = f"{name}/index_to_name.json"
     try:
         if not os.path.exists(file_path):
             print(f"ERROR: Class mapping file not found at {file_path}")
@@ -105,19 +111,19 @@ def load_classnames(name):
         with open(file_path) as f:
             mapping = json.load(f)
         print(f"Class mappings loaded successfully from {file_path}")
+        return mapping
+        # # Debug info
+        # print(f"Raw mapping sample (first 3 items): {list(mapping.items())[:3]}")
         
-        # Debug info
-        print(f"Raw mapping sample (first 3 items): {list(mapping.items())[:3]}")
-        
-        # Convert keys to integers and create reverse mapping
-        try:
-            idx2lbl = {int(v): k for k, v in mapping.items()}
-            print(f"Converted mapping sample (first 3 items): {list(idx2lbl.items())[:3]}")
-            return idx2lbl
-        except Exception as e:
-            print(f"Error converting class mappings: {e}")
-            # Fallback to string keys if int conversion fails
-            return {v: k for k, v in mapping.items()}
+        # # Convert keys to integers and create reverse mapping
+        # try:
+        #     idx2lbl = {int(v): k for k, v in mapping.items()}
+        #     print(f"Converted mapping sample (first 3 items): {list(idx2lbl.items())[:3]}")
+        #     return idx2lbl, mapping
+        # except Exception as e:
+        #     print(f"Error converting class mappings: {e}")
+        #     # Fallback to string keys if int conversion fails
+        #     return {v: k for k, v in mapping.items()}
     except Exception as e:
         print(f"Error loading class mappings for {name}: {e}")
         traceback.print_exc()
@@ -180,8 +186,9 @@ def predict(img, model, idx2lbl):
             idx_item = idx.item()
             print(f"Processing top prediction {i+1}: idx={idx_item}, value={v.item():.4f}")
             
-            if idx_item in idx2lbl:
-                label = idx2lbl[idx_item]
+            if str(idx_item) in idx2lbl:
+                print(f"inside predict - {idx_item}")
+                label = idx2lbl[str(idx_item)]
                 preds[label] = round(v.item(), 4)
                 print(f"Mapped to label: {label}")
             else:
@@ -209,10 +216,9 @@ def main():
     print("Loading models and class mappings")
     smodel = load_model("sports")
     vfmodel = load_model("vegfruits")
-    sidx2lbl = load_classnames("sports")
-    vfidx2lbl = load_classnames("vegfruits")
-    
-    print("Creating prediction functions")
+    sports_map = load_classnames("sports")
+    vegfruits_map = load_classnames("vegfruits")
+
     def sports_fn(img):
         print("\n--- Sports Classification Request ---")
         print(f"Input type: {type(img)}")
@@ -223,7 +229,7 @@ def main():
             print(f"Received boolean: {img}")
             return {"Boolean received (expected image)": 1.0}, 0.0
         try:
-            return predict(img, smodel, sidx2lbl)
+            return predict(img, smodel, sports_map)
         except Exception as e:
             print(f"Error in sports_fn: {e}")
             traceback.print_exc()
@@ -239,7 +245,7 @@ def main():
             print(f"Received boolean: {img}")
             return {"Boolean received (expected image)": 1.0}, 0.0
         try:
-            return predict(img, vfmodel, vfidx2lbl)
+            return predict(img, vfmodel, vegfruits_map)
         except Exception as e:
             print(f"Error in veg_fn: {e}")
             traceback.print_exc()

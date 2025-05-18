@@ -9,8 +9,16 @@ This repository contains a machine learning pipeline for training models on two 
 - Docker container images pushed to ECR
 - Training execution on EC2 instances triggered by git actions
 - Automated training triggered by GitHub Actions
-- Model artifacts saved to S3
+- Model artifacts saved to S3 
 
+## Important to does:
+- .github/workflows/01A_Deployment_Train_And_Store.yaml and .github\workflows\01D_Deployment_PR_Train_And_Store.yaml  :  POINT TO YOUR REMOTE IN DVC PULL. HERE REMOTE IN .dvc/config is "mlops"
+- image to be used : ami-01654480b8a1994bd  (image id in ec2) 
+- github\workflows\01A_Deployment_Train_And_Store.yaml : edit docker_username &   docker_password to point to your ECR
+- src/backend/torch_local/transfer_mar.py : change bucket name to point to your bucket line no 
+57.
+- 01D: s3 buckt name point to your bucker - line no 236 
+-01B: s3 buckt name point to your bucker - line no 660
 ## Setup
 
 1. Clone repository 
@@ -21,7 +29,7 @@ cd E2MLOps
 
 2. Install dependencies
 ```
-pip install -r requirements.cpu.txt
+pip install -r requirements.gpu.txt
 ```
 
 3. Configure AWS credentials
@@ -52,6 +60,8 @@ aws configure
 - PERSONAL_ACCESS_TOKEN : this is to be created in github developer settings. this gives access to run workflows. this will be like """ghp_********"""
 - AWS_SUBNET_ID_1: go to VPC in aws, and then to subnet group. take any one subnet group avaiable. this will be like """subnet-******"""
 - AWS_SECURITY_GROUP_ID: go to EC2, scroll down to Network and Security. Take the security group id. this will be like """sg-******"""
+- AWS_ECR_LOGIN_URI : 123456789012.dkr.ecr.us-east-1.amazonaws.com  -- where 123456789012 is aws account id
+- CDK_ACCOUNT: aws 12 digit account id -- 123456789012 
 
 7. DVC Configuration
 
@@ -72,7 +82,7 @@ dvc push
 delete raw data - delete sports and vegfruits folder, but keep sprts.dc and vegfruits.dvc files created.
 testing on local, this should pull data from s3: 
 ```
-dvc pull
+dvc pull - r mlops  
 ```
 
 8. Manully run on local for testing. This will save artifacts to s3. 
