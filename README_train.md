@@ -63,7 +63,15 @@ aws configure
 - AWS_ECR_LOGIN_URI : 123456789012.dkr.ecr.us-east-1.amazonaws.com  -- where 123456789012 is aws account id
 - CDK_ACCOUNT: aws 12 digit account id -- 123456789012 
 
-7. DVC Configuration
+7. first run manually from local to push train prod and dev model to s3.
+- launch instance
+- spot, configrations: request type-persistent, interuption behavious: stop
+- start ec2 - g4dn x large
+- image: ami-01654480b8a1994bd
+- size -128 GB
+- configure vs code to ec2
+
+8.  DVC Configuration (first time local)
 
 check DVC configuration:
 ```
