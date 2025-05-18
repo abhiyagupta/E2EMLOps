@@ -31,7 +31,7 @@ except Exception as e:
 # --- Download from S3 (CPU models only) ---
 def download_from_s3():
     print("Attempting to download artifacts from S3...")
-    BUCKET_NAME = 'mybucket-emlo-mumbai'
+    BUCKET_NAME = 'abhiya-mlops-project'
     ARTIFACTS = [
         'kserve-ig/vegfruits-classifier-prod/pths/vegfruits_cpu.pt',
         'kserve-ig/sports-classifier-prod/pths/sports_cpu.pt',
@@ -80,7 +80,7 @@ transform = transforms.Compose([
 # --- Load models ---
 def load_model(name):
     print(f"Loading model: {name}")
-    # mybucket-emlo-mumbai/kserve-ig/vegfruits-classifier-prod/pths/
+    
     path = f"{name}/{name}_cpu.pt"
     try:
         if not os.path.exists(path):

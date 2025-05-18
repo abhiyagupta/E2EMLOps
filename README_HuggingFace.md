@@ -39,4 +39,5 @@ Thsi will deploy trained model in Hugging face spaces via git actions.
 - this will push app.py, requirements.txt and readme.md to hugging face space created
 - deployemnt in HF spaces will occur usuing gradio as interface
 
+7. NOTE: edit the s3 bucket name in gradio_deploy/app.py file to point to your bucket line 34
 

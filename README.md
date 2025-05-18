@@ -197,11 +197,12 @@ Run `aws configure` and set the crednetials
 
 Make sure `data/processed/sports` and  `data/processed/vegfruits` are only present and remove other zip files
 
-- `dvc remote add -d myremote s3://mybucket-emlo-mumbai/session-18-data`
-- `dvc add data`
+- `dvc remote add -d mlops s3://abhiya-mlops-project/data/`
+- `dvc add .\data\processed\vegfruits\`
+- `dvc add .\data\processed\sports\`
 
 Set the S3 URL and push
-- `dvc push -r myremote`
+- `dvc push -r mlops`
 
 ### Docker command for train and test
 
@@ -230,7 +231,7 @@ Set the S3 URL and push
                 "
     ```
 
-- `dvc pull -r myremote` - pulls from s3 to local
+- `dvc pull -r mlops` - pulls from s3 to local
 - `dvc repro -f` - Runs train and test 
 - `python src/backend/torch_local/transfer_mar.py -p dev` - Transfers required files like onnx model, pt model, classes.json and accuracy information to `s3 dev` location or the given path in s3.
 
