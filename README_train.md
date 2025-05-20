@@ -18,7 +18,10 @@ This repository contains a machine learning pipeline for training models on two 
 - src/backend/torch_local/transfer_mar.py : change bucket name to point to your bucket line no 
 57.
 - 01D: s3 buckt name point to your bucker - line no 236 
--01B: s3 buckt name point to your bucker - line no 660
+- 01B: s3 buckt name point to your bucker - line no 660 
+- 01B point to ur path line 334
+- 01B argo cd: change repo name and point to correct argocd repo
+
 ## Setup
 
 1. Clone repository 

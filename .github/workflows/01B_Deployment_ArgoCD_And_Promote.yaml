@@ -331,7 +331,7 @@ jobs:
               --cluster=basic-cluster-1 \
               --namespace=kube-system \
               --name=aws-load-balancer-controller \
-              --attach-policy-arn=arn:aws:iam::306093656765:policy/AWSLoadBalancerControllerIAMPolicy \
+              --attach-policy-arn=arn:aws:iam::390844750487:policy/AWSLoadBalancerControllerIAMPolicy \
               --override-existing-serviceaccounts \
               --region ap-south-1 \
               --approve
@@ -498,24 +498,24 @@ jobs:
       - name: Checkout Repo ArgoCD
         uses: actions/checkout@v4
         with:
-          repository: ajithvcoder/emlo4-session-18-ajithvcoder-canary-argocd-kserve
+          repository: abhiyagupta/E2MLOps_argo_cd_kserve.git
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # PAT with write access to Repo B
-          path: emlo4-session-18-ajithvcoder-canary-argocd-kserve
+          path: abhiyagupta/E2MLOps_argo_cd_kserve
 
       - name: Replace any AWS ELB URL in model-server.cm.yml
         run: |
           new_url="${{ steps.get-url.outputs.url }}"
-          file="emlo4-session-18-ajithvcoder-canary-argocd-kserve/fastapi-helm/templates/model-server.cm.yml"
+          file="abhiyagupta/E2MLOps_argo_cd_kserve/fastapi-helm/templates/model-server.cm.yml"
           # Replace any http://*.elb.amazonaws.com with the new URL
           sed -E -i "s|http://[a-z0-9.-]+\.elb\.amazonaws\.com|http://$new_url|g" "$file"
 
       # 4. Commit & push changes to Repo B
       - name: Commit & push to Repo B
-        working-directory: emlo4-session-18-ajithvcoder-canary-argocd-kserve
+        working-directory: abhiyagupta/E2MLOps_argo_cd_kserve
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # git add emlo4-session-18-ajithvcoder-canary-argocd-kserve/fastapi-helm/templates/model-server.cm.yml
+          # git add abhiyagupta/E2MLOps_argo_cd_kserve/fastapi-helm/templates/model-server.cm.yml
 
           git add .
           if git diff --cached --quiet; then
@@ -542,7 +542,7 @@ jobs:
 
 
       - name: Create s3-secret.yaml
-        working-directory: emlo4-session-18-ajithvcoder-canary-argocd-kserve
+        working-directory: abhiyagupta/E2MLOps_argo_cd_kserve
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -586,7 +586,7 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
 
-          cd emlo4-session-18-ajithvcoder-canary-argocd-kserve
+          cd abhiyagupta/E2MLOps_argo_cd_kserve
           ls argo-apps
           sleep 5
 
@@ -636,7 +636,7 @@ jobs:
 
 
       - name: Model 1 - Run test and promote if >90% success
-        working-directory: emlo4-session-18-ajithvcoder-canary-argocd-kserve
+        working-directory: abhiyagupta/E2MLOps_argo_cd_kserve
         continue-on-error: true
         run: |
           pip install matplotlib
@@ -683,7 +683,7 @@ jobs:
           fi
 
       - name: Model 2 - Run test and promote if >90% success
-        working-directory: emlo4-session-18-ajithvcoder-canary-argocd-kserve
+        working-directory: abhiyagupta/E2MLOps_argo_cd_kserve
         continue-on-error: true
         run: |
           pip install matplotlib
@@ -740,15 +740,15 @@ jobs:
 
           ls -la
 
-          ls emlo4-session-18-ajithvcoder-canary-argocd-kserve -la
+          ls abhiyagupta/E2MLOps_argo_cd_kserve -la
 
           echo "Veg Fruits - Response time graph" >> report.md
 
-          echo "![VegFruits Results](emlo4-session-18-ajithvcoder-canary-argocd-kserve/response_times_vegfruits.png)" >> report.md
+          echo "![VegFruits Results](abhiyagupta/E2MLOps_argo_cd_kserve/response_times_vegfruits.png)" >> report.md
 
           echo "Sports - Response time graph" >> report.md
 
-          echo "![Sports Results](emlo4-session-18-ajithvcoder-canary-argocd-kserve/response_times_sports.png)" >> report.md
+          echo "![Sports Results](abhiyagupta/E2MLOps_argo_cd_kserve/response_times_sports.png)" >> report.md
 
           cml comment create report.md 
 
