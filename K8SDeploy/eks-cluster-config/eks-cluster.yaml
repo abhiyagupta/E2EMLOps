@@ -17,7 +17,6 @@ managedNodeGroups:
     - t3.xlarge
     - t3a.xlarge
     - t3a.2xlarge	
-    - m5.xlarge
     - g4dn.xlarge
     desiredCapacity: 1
     ssh:
@@ -37,12 +36,6 @@ managedNodeGroups:
     - t3.xlarge
     - t3a.xlarge
     - t3a.2xlarge	
-    - m5.xlarge
-    - m5a.xlarge
-    - m6a.xlarge
-    - c5.xlarge
-    - c5a.xlarge
-    - c6a.xlarge
     - g4dn.xlarge
     
     # desiredCapacity: 1
