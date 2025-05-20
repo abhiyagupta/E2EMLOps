@@ -18,10 +18,10 @@ spec:
     serviceAccountName: s3-read-only
     pytorch:
       protocolVersion: v1
-      storageUri: s3://mybucket-emlo-mumbai/kserve-ig/sports-classifier-prod/
+      storageUri: s3://abhiya-mlops-project/kserve-ig/sports-classifier-prod/
       # storageUri: s3://tsai-emlo/kserve-ig/fakeimagenet-vit/
       # image: pytorch/torchserve-kfs:0.12.0
-      image: 306093656765.dkr.ecr.ap-south-1.amazonaws.com/model-onnx-server:latest
+      image: 390844750487.dkr.ecr.ap-south-1.amazonaws.com/model-onnx-server:latest
       imagePullPolicy: Always
       resources:
         requests:
