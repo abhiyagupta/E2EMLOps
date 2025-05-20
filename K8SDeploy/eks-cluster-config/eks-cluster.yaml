@@ -7,12 +7,18 @@ iam:
 metadata:
   name: basic-cluster-1
   region: ap-south-1 
-  # region: us-west-2
   version: "1.30"
 
 managedNodeGroups:
   - name: ng-dedicated-1
-    instanceType: t3a.xlarge
+    #instanceType: t3a.xlarge
+    instanceTypes:
+    - t2.xlarge
+    - t3.xlarge
+    - t3a.xlarge
+    - t3a.2xlarge	
+    - m5.xlarge
+    - g4dn.xlarge
     desiredCapacity: 1
     ssh:
       allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
@@ -30,6 +36,15 @@ managedNodeGroups:
     - t2.xlarge
     - t3.xlarge
     - t3a.xlarge
+    - t3a.2xlarge	
+    - m5.xlarge
+    - m5a.xlarge
+    - m6a.xlarge
+    - c5.xlarge
+    - c5a.xlarge
+    - c6a.xlarge
+    - g4dn.xlarge
+    
     # desiredCapacity: 1
     minSize: 3 # 3
     maxSize: 5  # 5

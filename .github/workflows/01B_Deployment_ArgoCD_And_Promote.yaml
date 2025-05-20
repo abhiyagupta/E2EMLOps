@@ -61,7 +61,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1    # hard coding forusuing differnt region 
+          aws-region: ${{ secrets.AWS_REGION }}    
 
       - name: Display the commit ID
         run: |
@@ -85,11 +85,11 @@ jobs:
           # AMI with CPU only
          
           #ec2-instance-type:   #t3a.2xlarge   
-          #ec2-image-id: ami-01654480b8a1994bd - to be used with ap-south-1
-          ec2-image-id: ami-0fcdcdcc9cf0407ae   #changed ami for us-east-1 region
-          ec2-instance-type: t3a.xlarge    #g4dn.xlarge    
-          subnet-id: subnet-0b86fb57366549f84       #hard coding for region change
-          security-group-id: sg-034ddbe871e5880a0
+          ec2-image-id: ami-01654480b8a1994bd - to be used with ap-south-1
+          #ec2-image-id: ami-0fcdcdcc9cf0407ae   #changed ami for us-east-1 region
+          ec2-instance-type:  g4dn.xlarge         #t3a.xlarge
+          subnet-id: ${{ secrets.AWS_SUBNET_ID_1 }}      #hard coding for region change
+          security-group-id: ${{ secrets.AWS_SECURITY_GROUP_ID }}
           market-type: "spot" 
 
   #----------------------------------------
@@ -187,7 +187,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ap-south-1
+          AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Configure AWS as root
         run: |
@@ -779,7 +779,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 
+          aws-region: ${{ secrets.AWS_REGION }}
           
       - name: Stop EC2 runner
         uses: machulav/ec2-github-runner@v2.3.9
