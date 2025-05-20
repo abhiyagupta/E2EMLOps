@@ -505,6 +505,10 @@ eksctl create iamserviceaccount \
     --approve
 ```
 
+NOTE: AFTER ADDING POLICY, 6 STACKS SHOULD BE CREATED IN AWS CLOUD FORMATION. 
+IF POLICY FORMATION FAILS, CHECK NOTES FOR KUBERNETES
+
+
 ![](./assets/deployment-01-kubernetes/manual/load_balancer_url_istio.png)
 
 
@@ -524,7 +528,7 @@ The URL that appears in above command can also be seen in `Loadbalancers` apge i
 
 Test if `sports-classifier` works fine with sports s3 models
 
-- `kubectl apply -f sports-classifier.yaml`
+- `kubectl apply -f sports-classifier.yml`
 
 
 Check if everything works and delete it, we need to setup prometheus and grafana
@@ -540,7 +544,7 @@ kubectl get svc -n istio-system
 
 Delete classifier after testing
 
-- `kubectl delete -f sports-classifier.yaml`
+- `kubectl delete -f sports-classifier.yml`
 
 Till here you can know if everything works fine or not with `python test_kserve_sports_2.py`
 
@@ -709,6 +713,14 @@ the deletion gets failed so at backend something would be running and it may cos
 
 **If you are triggering a spot instance manually with `peresistent` type ensure that both the spot request is cancelled manually
 and the AWS instance is terminated finally**
+
+NOTE: CHECK IN AWS FOR DELETION
+- LOAD BALANCER
+- EC2 INSTANCE
+- SPOT REQUEST 
+- CLOUD FORMATION
+- VPC
+
 
 ### Results Screenshots - D01 Manual
 
