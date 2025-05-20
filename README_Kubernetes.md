@@ -1,3 +1,11 @@
+- running in git actions cicd pipeline: 
+- - run Job 01 Main Deployment
+- - when argo cd is deployed, load balancers will be created in aws console
+- - to view model UI and inference, go to load balancers (console)
+- - takne DNS of load balance
+- - in browser, https:// DNS_LOAD_BALANCER
+- - the UI will be avaialble only for 400 secs. 
+
 NOTES change: 
 - when running in local first create a folder
 ```
