@@ -12,6 +12,7 @@ git clone E2EMLOps_argocd_kserve
 ```
 - line 24 in sports-classifier.yml (K*-->eks cluster)
 - same for veg fruits classfier
+- /K8SDeploy/eks-cluster-config/eks-cluster.yaml: comment out line no 20 & 42  publickKeyPath to run in local
 - test_kserve_sports_2.py - change url. url shd be copied from load balancers dns
 - after adding poliy- go to model server cm in argo cd and change dns 
 - when opening a port - go to new terminal
@@ -19,7 +20,17 @@ git clone E2EMLOps_argocd_kserve
 - ARGO cd: check below. clone argo cd repo in same workspace first. then follow steps. 
 - chnage the argo cd at relevant places. 
 - after cloning argo cd- add s3secrets.yaml 
-
+- after reaching LOAD TESTIN WITH GRAFANA, run the follwoing command- but change dns from load balance
+- python3 test_load_vegfruits_2.py --url "http://a37377146bd384c3294c355c9ce14a0f-1586045089.ap-south-1.elb.amazonaws.com/v1/models/vegfruits-classifier:predict" --requests 10 --workers 2 
+- python3 test_load_sports_2.py --url "http://a37377146bd384c3294c355c9ce14a0f-1586045089.ap-south-1.elb.amazonaws.com/v1/models/sports-classifier:predict" --requests 10 --workers 2
+- try the asme with different workers and different request. workers 4, requests 100/200 
+- Grafanna dashboard accsess:
+-  - open grafana dashboard 
+-  - home--> connection ---> add data surce-->chose prometheus.
+-  - add url http://prometheus-operated.kfserving-monitoring.svc.cluster.local:9090 and save and test
+-  - go to https://grafana.com/grafana/dashboards/18032-knative-serving-revision-http-requests/
+-  - from above rul download json
+-  - go to grafana --> dashboard--> new--> import --> add the json got from above step.
 ```
 export PATH=$HOME/bin:$PATH
 ```
