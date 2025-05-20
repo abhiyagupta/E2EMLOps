@@ -10,15 +10,17 @@ git clone E2EMLOps
 cd dev
 git clone E2EMLOps_argocd_kserve
 ```
-- line 24 in sports-classifier.yml (K*-->eks cluster)
-- same for veg fruits classfier
+- line 21, 24 in sports-classifier.yml (K*-->eks cluster)
+- same for veg fruits classfier ln no 18, 21
 - /K8SDeploy/eks-cluster-config/eks-cluster.yaml: comment out line no 20 & 42  publickKeyPath to run in local
 - test_kserve_sports_2.py - change url. url shd be copied from load balancers dns
 - after adding poliy- go to model server cm in argo cd and change dns 
 - when opening a port - go to new terminal
 - in new terminal add """ export PATH=$HOME/bin:$PATH """
 - ARGO cd: check below. clone argo cd repo in same workspace first. then follow steps. 
-- chnage the argo cd at relevant places. 
+- chnage the argo cd at relevant places.
+- clone argo cd repo to same workspace but not in same folder
+- u can do this by " code . " 
 - after cloning argo cd- add s3secrets.yaml 
 - after reaching LOAD TESTIN WITH GRAFANA, run the follwoing command- but change dns from load balance
 - python3 test_load_vegfruits_2.py --url "http://a37377146bd384c3294c355c9ce14a0f-1586045089.ap-south-1.elb.amazonaws.com/v1/models/vegfruits-classifier:predict" --requests 10 --workers 2 
