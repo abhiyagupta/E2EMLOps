@@ -83,9 +83,10 @@ jobs:
           # ec2-instance-type: g4dn.xlarge
 
           # AMI with CPU only
-          # ec2-image-id: ami-0e35ddab05955cf57
+         
           #ec2-instance-type:   #t3a.2xlarge   
-          ec2-image-id: ami-01654480b8a1994bd
+          #ec2-image-id: ami-01654480b8a1994bd - to be used with ap-south-1
+          ec2-image-id: ami-0fcdcdcc9cf0407ae   #changed ami for us-east-1 region
           ec2-instance-type: t3a.xlarge    #g4dn.xlarge    
           subnet-id: subnet-0b86fb57366549f84       #hard coding for region change
           security-group-id: sg-034ddbe871e5880a0
