@@ -1,16 +1,22 @@
 ## EMLOV4 Session-18 Capstone Assignment 
 
-**Summary**
+### Deliverables for Capstone
 
 Following are the deployments made in this Capstone assignment
 
-1. Deployment 01 - Kubernetes - Train a model with vegetable fruits and sports dataset and perform a argo cd deployment with load testing with github actions.
-2. Deployment 02 - Hugging Face - Perform a hugging face deployment with Gradio with github actions.
-3. Deployment 03 - AWS Lambda - Perform a AWS Lambda deployment with Gradio with github actions.
+1. Deployment 01 - Kubernetes - [Video Link](https://youtu.be/_WKjwkkomz8) - Train a model with vegetable fruits and sports dataset and perform a argo cd deployment with load testing with github actions. [Workflow Result 1](https://github.com/ajithvcoder/E2EMLOps/commit/4da1e31fb16f76a611d8deed7c684fa09e20df18#commitcomment-157317415) , [Workflow Result 2](https://github.com/ajithvcoder/E2EMLOps/pull/3#issuecomment-2888775354)
+
+2. Deployment 02 - Hugging Face - Perform a hugging face deployment with Gradio with github actions. [Live Link](https://huggingface.co/spaces/ajithvcoder/emlov4-session-18-deployment-hf)
+
+3. Deployment 03 - AWS Lambda - [Live Link](https://vdtzkarjl35k5oemfpepbfjft40zokmh.lambda-url.ap-south-1.on.aws/) - Perform a AWS Lambda deployment with Gradio with github actions. 
+
+Note: Video link and 2 live urls are available above which are Capstone assignment deliverables.
+(Kindly run at 2x as its a long video. Results are at end fo the video)
 
 ### Contents
 
 - [Requirements](#requirements)
+- [Deliverables](#deliverables)
 - [Deployments](#deployments)
     - [Dataset](#dataset)
     - [Model Development](#model-development)
@@ -25,23 +31,26 @@ Following are the deployments made in this Capstone assignment
             - [ArgoCD Deployment](#argocd-deployment)
             - [Load testing with promethes and Grafana](#load-testing-with-promethes-and-grafana)
             - [Deletion Procedure](#deletion-procedure)
-            - [Results Screenshots - D01 Manual](#results-screenshots---d01-manual)
+            - [Results Screenshots - D01 Argo CD Manual Deployment](#results-screenshots---d01-argo-cd-manual-deployment)
         - [Github actions - Automaing Manual setup End to End - D01](#github-actions---automaing-manual-setup-end-to-end---d01)
-            - [Results Screenshots - 01A and 01B Deployment Main](#results-screenshots---01a-and-01b-deployment-main)
+            - [Results Screenshots - Github Actions 01A and 01B Deployment Main](#results-screenshots---github-actions-01a-and-01b-deployment-main)
             - [Github actions workflow Link - D01A-D01B](#github-actions-workflow-link---d01a-d01b)
-            - [Results Screenshots - D01C On PR Request](#results-screenshots---d01c-on-pr-request)
+            - [Results Screenshots - D01C Github actions On PR Request](#results-screenshots---d01c-github-actions-on-pr-request)
             - [Github actions workflow Link - D01C](#github-actions-workflow-link---d01c)
-        - [D01 - Deployment - Video Link](#d01---deployment---video-link)
-    - [Deployment 02]
-        - [Results Screenshots - D02](#results-screenshots)
+        - [Video Link D01 - Deployment](#d01---deployment---video-link)
+    - [Deployment 02 - Hugging face](#deployment-02---hugging-face)
+        - [Steps for hugging face deployment](#steps-for-hugging-face-deployment) 
+        - [Results Screenshots - D02 - HuggingFace](#results-screenshots---d02---huggingface)
+        - [Live Link - D02](#live-link---d02)
     - [Deployment 03 AWS Lambda](#deployment-03---aws-lambda)
         - [D03 - Installations](#d03---installations)
         - [D03 - Usage](#d03---installations)
         - [D03 - Docker Image Creation](#d03---docker-image-creation)
         - [Results Screenshots - D03](#results-screenshots---d03)
         - [Github actions workflow Link - D03](#github-actions-workflow-link---d03)
+        - [Live Link - D03](#live-link---d03)
 - [Learnings](#learnings)
-- [Technologies Used]
+- [Technologies Used](#technologies-used)
 
 ### Requirements
 1. On Pull Request to the main branch:
@@ -74,26 +83,10 @@ Kubernetes manifest files and Helm charts.
 - Screenshots and explanations of your pipeline in action.
 Performance metrics, including latency and stress test results.
 
+todo
 Explanation: Deployment 01
-Architecture diagram
-dvc setup and pull - dataset
-start from train and store feature
-then go with optuna taking the lowest loss model and saving it - hyper paramter optimization
-models usage
-onnx model generation
-torch script model for usage
-mar for torch serve usage
-accuracy txt for verification
-then transfering the outputs to s3-dev
 
-Now kubernetes
-setting up of kserve, knative, argocd, promethus, grafana
-show the screenshots on load test
 
-Now deployments workflow
-show the ecr repo and docker files
-on PR generates a model in dev
-compare and post comment in PR
 
 Now kubernetes deployment - github actions 
 show the ecr repo and docker all 3 files
@@ -107,6 +100,8 @@ comment load test results in commit
 
 
 ### Deployments
+
+Note: This repo also has the procedure for ArgoCD deployment repo `https://github.com/ajithvcoder/emlo4-session-18-ajithvcoder-canary-argocd-kserve`
 
 ### Dataset
 
@@ -144,10 +139,19 @@ data/processed/vegfruits/
 
 Training a model
 
+We have used timm models `convnext_tiny` and `edgenext_xx_small` for both classifiers. `output_{project}.txt` is generated after every train which helps us in getting models accuracy without evaluating.
+
 **Hparams Search**
 
+- Optuna is used for hyperparameter search. Hydra and pytorch lightining is used for flexiblity.
+- You can refer `hsports.yaml` and `hvegfruits.yaml` for final experimentation.
 
-Torch serve is using onnx model for deployment
+Torch serve is using onnx model for deployment, so following are required
+
+- congig.properties
+- handler file
+- model 
+- class.json file
 
 **Torchserve - Preparation file**
 
@@ -197,12 +201,11 @@ Run `aws configure` and set the crednetials
 
 Make sure `data/processed/sports` and  `data/processed/vegfruits` are only present and remove other zip files
 
-- `dvc remote add -d mlops s3://abhiya-mlops-project/data/`
-- `dvc add .\data\processed\vegfruits\`
-- `dvc add .\data\processed\sports\`
+- `dvc remote add -d myremote s3://mybucket-emlo-mumbai/session-18-data`
+- `dvc add data`
 
 Set the S3 URL and push
-- `dvc push -r mlops`
+- `dvc push -r myremote`
 
 ### Docker command for train and test
 
@@ -231,7 +234,7 @@ Set the S3 URL and push
                 "
     ```
 
-- `dvc pull -r mlops` - pulls from s3 to local
+- `dvc pull -r myremote` - pulls from s3 to local
 - `dvc repro -f` - Runs train and test 
 - `python src/backend/torch_local/transfer_mar.py -p dev` - Transfers required files like onnx model, pt model, classes.json and accuracy information to `s3 dev` location or the given path in s3.
 
@@ -264,7 +267,7 @@ Set the S3 URL and push
 
 **If you are triggering a spot instance manually with peresistent type ensure that both the spot request is cancelled manually and the AWS instance is terminated finally**
 
-Note: This repo also has the procedure for ArgoCD deployment repo https://github.com/ajithvcoder/emlo4-session-18-ajithvcoder-canary-argocd-kserve
+Note: This repo also has the procedure for ArgoCD deployment repo `https://github.com/ajithvcoder/emlo4-session-18-ajithvcoder-canary-argocd-kserve`
 
 It took two months of effort in every weekend to complete this as a group and it may take you atleast 20$ of AWS cost if you are debugging and developing with AWS for this deployment alone. if you just going to test it , it may cost 0.05 to 1 dollar with github actions.
 
@@ -375,11 +378,18 @@ Name: ui-server
 
 All above images test in ports like 8080 or 9090 in local and then change to port 80, else its hard to debug in local.
 
+
 **Use below commands to debug web server and ui server**
 
 - `docker run -it --network my_network -v ./emlo4-s18/E2EMLOps/K8SDeploy/src/web-server:/opt/src -p9090:9090 web-server bash`
 
 - `uvicorn server:app --host 0.0.0.0 --port 9090`
+
+**ECR Repo** 
+
+- Push all images to ECR Repo
+
+    ![](./assets/deployment-01-kubernetes/ecr_repos.png)
 
 
 ### Cluster creation and configuration
@@ -504,9 +514,8 @@ eksctl create iamserviceaccount \
     --region ap-south-1 \
     --approve
 ```
+NOTE: AFTER ADDING POLICY, 6 STACKS SHOULD BE CREATED IN AWS CLOUD FORMATION. IF POLICY FORMATION FAILS, CHECK NOTES FOR KUBERNETES
 
-NOTE: AFTER ADDING POLICY, 6 STACKS SHOULD BE CREATED IN AWS CLOUD FORMATION. 
-IF POLICY FORMATION FAILS, CHECK NOTES FOR KUBERNETES
 
 
 ![](./assets/deployment-01-kubernetes/manual/load_balancer_url_istio.png)
@@ -626,7 +635,7 @@ Check if you are able to access the UI, in codespaces i am not able to forward a
 
 **Argo CD deployment**
 
-Note: I have used [canary-argocd-kserve-repo](https://github.com/ajithvcoder/emlo4-session-18-ajithvcoder-canary-argocd-kserve) repo for deployment of argoCD apps. Please refer to `https://github.com/ajithvcoder/emlo4-session-18-ajithvcoder-canary-argocd-kserve` for argocd repo structure
+Note: I have used [canary-argocd-kserve-repo](https://github.com/ajithvcoder/emlo4-session-18-ajithvcoder-canary-argocd-kserve) repo for deployment of argoCD apps. Please refer to `https://github.com/abhiyagupta/E2MLOps_argo_cd_kserve` for argocd repo structure
 
 - Have s3-secret.yaml file in argo-apps/s3-secret.yaml folder and update it with your AWS credentails i.e `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 
@@ -714,6 +723,7 @@ the deletion gets failed so at backend something would be running and it may cos
 **If you are triggering a spot instance manually with `peresistent` type ensure that both the spot request is cancelled manually
 and the AWS instance is terminated finally**
 
+
 NOTE: CHECK IN AWS FOR DELETION
 - LOAD BALANCER
 - EC2 INSTANCE
@@ -722,7 +732,8 @@ NOTE: CHECK IN AWS FOR DELETION
 - VPC
 
 
-### Results Screenshots - D01 Manual
+
+### Results Screenshots - D01 Argo CD Manual Deployment
 
 **Ports establishment**
 
@@ -788,16 +799,25 @@ NOTE: CHECK IN AWS FOR DELETION
 
 - Min and max pod scaling are 1 to 3
 
+![](./assets/deployment-01-kubernetes/snap_inference_service.png)
+
+Load request to model 1
+
 ![](./assets/deployment-01-kubernetes/manual/snap_load_test_vegfruits.png)
 
 ![](./assets/deployment-01-kubernetes/manual/snap_load_test_sports.png)
 
 ![](./assets/deployment-01-kubernetes/manual/snap_100_load.png)
 
-![](./assets/deployment-01-kubernetes/manual/snap_scale_down.png)
+Scale up
 
 ![](./assets/deployment-01-kubernetes/manual/snap_scale_up.png)
 
+Scale down
+
+![](./assets/deployment-01-kubernetes/manual/snap_scale_down.png)
+
+Load request to model 2
 
 ![](./assets/deployment-01-kubernetes/manual/snap_scale_load.png)
 
@@ -849,9 +869,6 @@ Two Workflows
 
     c. Checks if the model is acheving greater than the accuracy than `s3-prod`, if so makes a comment
 
-ECR Repo 
-
-![](./assets/deployment-01-kubernetes/ecr_repos.png)
 
 There are 3 repos
 1. a18/ui-server - Next JS UI
@@ -862,13 +879,18 @@ There are 3 repos
 
     ![](./assets/deployment-01-kubernetes/github-actions/github_secrets.png)
 
-### Results Screenshots - 01A and 01B Deployment Main
+*Note: After training for deployment 1 we save either at {project_name}-dev, {project_name}-stage, {project_name}-prod depending on the use case in s3 bucket.
+For deployment-2 and deployment-3 we use {project-name}-prod as the model source for deployement
+
+### Results Screenshots - Github Actions 01A and 01B Deployment Main
 
 **Main Deployment workflow**
 
 1. On push to main branch triggered
 
-2. Train and push to stage
+2. Train the model and push to s3 `stage` folder
+
+    ![](./assets/deployment-01-kubernetes/snap_prod_s3.png)
 
 3. Setups argo cd and deploy two models with HPA
 
@@ -882,7 +904,11 @@ There are 3 repos
 
     ![](assets/deployment-01-kubernetes/github-actions/01A/snap_probabilty_2.png)
 
-4. After successfull load test promotes model from stage to dev  - (screenshot)
+4. Deploys the argo cd app
+
+    ![](./assets/deployment-01-kubernetes/github-actions/01A/snap_githubactions_deploy.png)
+
+4. After successfull load test promotes model from s3-stage to s3-dev  - (screenshot)
 
     Model 1
 
@@ -900,9 +926,13 @@ There are 3 repos
 
 - [D01 - Kubernetes - Main - Final workflow Result](https://github.com/ajithvcoder/E2EMLOps/actions/runs/15092736500)
 
-### Results Screenshots - D01C On PR Request
+### Results Screenshots - D01C Github actions On PR Request
+
+When a new PR is made this workflow starts to execute. it trains and then pushes the model to s3
 
 **PR Accuracy Test workflow**
+
+![](./assets/deployment-01-kubernetes/github-actions/01B/pr_new.png)
 
 1. Overall actions workflow
 
@@ -938,13 +968,79 @@ There are 3 repos
 
 ### D01 - Deployment - Video Link
 
-- todo
+- [Youtube Link](https://youtu.be/_WKjwkkomz8)
+
+- [Workflow Result 1](https://github.com/ajithvcoder/E2EMLOps/commit/4da1e31fb16f76a611d8deed7c684fa09e20df18#commitcomment-157317415)
+
+- [Workflow Result 2](https://github.com/ajithvcoder/E2EMLOps/pull/3#issuecomment-2888775354)
+
+(Kindly run at 2x as its a long video. Results are at end fo the video)
+
+### Deployment 02 - Hugging face
+
+*Note: After training for deployment 1 we save either at {project_name}-dev, {project_name}-stage, {project_name}-prod depending on the use case in s3 bucket.
+For deployment-2 and deployment-3 we use {project-name}-prod as the model source for deployement.
+
+![](./assets/deployment-01-kubernetes/snap_prod_s3.png)
+
+
+Files are in `gradio_deploy/` folder
+
+### Steps for hugging face deployment
+
+1. S3 folder where model is present
+2. Develop a gradio app, 
+3. create a space in hugging face
+4. create write token as through github actions we need to push model and code to hugging faces
+5. Add the AWS secrets to Hugging face space.
+ 
+Set hugging face credentials in the enviornment
+
+Now push the files to hugging face space by `huggingface_hub` package.
+
+Local testing
+
+- `python app.py`
+
+app.py is a gradio app that takes model files from s3 and then uses it for prediction
+
+Hugging face space repo
+
+- [emlov4-session-18-deployment-hf](https://huggingface.co/spaces/ajithvcoder/emlov4-session-18-deployment-hf)
+
+### Results Screenshots - D02 - HuggingFace
+
+**Hugging face Repo Deployments**
+
+- Deployment on hugging face environemnt
+
+    ![](./assets/deployment-02-huggingface/snap_hf_deploy.png)
+
+    ![](./assets/deployment-02-huggingface/snap_hf_deploy_2.png)
+
+
+**Github actions deployment**
+
+- [Deployment 02 Github Actions Hugging Face Workflow Link](https://github.com/ajithvcoder/E2EMLOps/blob/dev_1/.github/workflows/02_Deployment_Hugging_Face_Gradio.yaml)
+
+    ![](./assets/deployment-02-huggingface/snap_deployment_02.png)
+
+### Live Link - D02
+
+[Live Deployed D02 Hugging faceLink](https://huggingface.co/spaces/ajithvcoder/emlov4-session-18-deployment-hf)
 
 ## Deployment 03 - AWS Lambda
 
 Note: Kindly check `AWS Cloud formations` to verify that everything is deleted
 
+*Note: After training for deployment 1 we save either at {project_name}-dev, {project_name}-stage, {project_name}-prod depending on the use case in s3 bucket.
+For deployment-2 and deployment-3 we use {project-name}-prod as the model source for deployement.
+
+![](./assets/deployment-01-kubernetes/snap_prod_s3.png)
+
 **Explanation**: First local deployment of Gradio is done for sports classifier and veg fruits classifier and tested with docker. Prodcution grade models are fetched from s3 and kept in "s3_files" folder for both deplpyment. Further they are added to docker container and CDK package is used to push the image to ECR and create lambda service stack.
+
+Files are in `LambdaFn/` folder
 
 ### D03 - Installations
 
@@ -1022,17 +1118,21 @@ CDK package is used to push the image to ECR and lmabda service
 
 - [D03 - Lambda - Final run workflow link](https://github.com/ajithvcoder/E2EMLOps/actions/runs/15085943040)
 
+### Live Link - D03
+
+[Live Deployed AWS Lambda Link](https://vdtzkarjl35k5oemfpepbfjft40zokmh.lambda-url.ap-south-1.on.aws/)
 
 ### Learnings
 
 1. Learnt about making automated deployment with github actions 
 
-2. If we build a gpu image from github runner then its throwing below error, so i have prebuilt image
+2. If we build a gpu image from github runner then its throwing below error, so i added new privalges to use host gpu.
 
 ```
 /opt/conda/lib/python3.11/site-packages/torch/cuda/__init__.py:734: UserWarning: Can't initialize NVML
   warnings.warn("Can't initialize NVML")
 ```
+3. I learnt a lot about Github actions, Kubernetes services in past few assignments and i learnt that its good to spent some money for AWS services, similar to how we pay fees for courses. We get some courses for 20k, 50k but we hesitate to spend 500 ro 1000 rupees for doing some practical work, it has helped me. I spent 10k on all 18 assignments, it has helped me in handling kubernetes issues in my office.
 
 *Mostly other stuffs are already done in previous assignments and this assignment is a combination of everything.
 
@@ -1052,11 +1152,22 @@ CDK package is used to push the image to ECR and lmabda service
 
 [FastAPI|Gradio](https://www.gradio.app/) - A Python library for building simple, interactive web interfaces for machine learning models and APIs.
 
-[Nextjs]() - Frontend FrameWork
+[Nextjs](https://nextjs.org/) - Frontend FrameWork
 
-[K8s|KNative|Kserve|Istio|ArgoCD]() - AWS Kubernets and ArgoCD 
+[K8s](https://kubernetes.io/)|[KNative](https://knative.dev/docs/)|[Kserve](https://kserve.github.io/website/latest/)|[Istio](https://istio.io/)|[ArgoCD](https://argo-cd.readthedocs.io/en/stable/) - AWS Kubernets and ArgoCD 
 
-[Prometheus|Grafana] - observability
+[Prometheus](https://prometheus.io/)|[Grafana](https://grafana.com/) - observability
 
 
 [![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](https://github.com/ashleve/lightning-hydra-template#license)
+
+
+**Group Members**
+
+1. Ajith Kumar V (myself)
+
+2. Hema M
+
+3. Muthukamalan
+
+4. Abhiya gupta

@@ -87,7 +87,7 @@ jobs:
           #ec2-instance-type:   #t3a.2xlarge   
           ec2-image-id: ami-01654480b8a1994bd    #to be used with ap-south-1
           #ec2-image-id: ami-0fcdcdcc9cf0407ae   #changed ami for us-east-1 region
-          ec2-instance-type:  g4dn.xlarge         #t3a.xlarge
+          ec2-instance-type:  t3a.xlarge          #g4dn.xlarge    USE if T# is not aviabale
           subnet-id: ${{ secrets.AWS_SUBNET_ID_1 }}      #hard coding for region change
           security-group-id: ${{ secrets.AWS_SECURITY_GROUP_ID }}
           market-type: "spot" 

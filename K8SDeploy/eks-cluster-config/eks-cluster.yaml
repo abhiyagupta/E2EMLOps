@@ -17,7 +17,7 @@ managedNodeGroups:
     - t3.xlarge
     - t3a.xlarge
     - t3a.2xlarge	
-    - g4dn.xlarge
+    #- g4dn.xlarge     #sometimes smaller instance is not availble, then u can experiment with other instances
     desiredCapacity: 1
     ssh:
       allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
@@ -36,7 +36,7 @@ managedNodeGroups:
     - t3.xlarge
     - t3a.xlarge
     - t3a.2xlarge	
-    - g4dn.xlarge
+    #- g4dn.xlarge     #sometimes smaller instance is not availble, then u can experiment with other instances
     
     # desiredCapacity: 1
     minSize: 3 # 3
