@@ -48,12 +48,13 @@ export CDK_DEFAULT_ACCOUNT=*12 digit aws acc id*
 cdk bootstrap aws://*12 digit aws acc id*/ap-south-1
 cdk deploy --require-approval=never
 ```
-this will create : CHECK AWS CONSOLE 
+this will create : CHECK AWS CONSOLE FOR URL
 - cdktoolkit & gradiolambdafn stacks in AWS cloud formation
 - in lambda, this will create a emlolambdafunction
 - aws-->lambda--> manage
 - in lambda function, check function url.
 - paste function url in chrome to see deployed end result
+- remember, for aws lambda it is cold start, so it will tke some time for URL to load
 
 destroy/stop
 ```
@@ -65,5 +66,6 @@ GIT ACTIONS:
 - after reaching deplaoy to aws lambda with graio step, check lambda function in aws
 - get function url and test
 - git deployemtn, url is valid only for 40secs , then destro process will start
+- remember, for aws lambda it is cold start, so it will tke some time for URL to load
 
 
