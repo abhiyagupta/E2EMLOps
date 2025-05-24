@@ -1164,10 +1164,11 @@ CDK package is used to push the image to ECR and lmabda service
 
 **Group Members**
 
-1. Ajith Kumar V (myself)
+1. Abhiya gupta 
 
-2. Hema M
+2. Ajith Kumar V 
 
-3. Muthukamalan
+3. Hema M
 
-4. Abhiya gupta
+4. Muthukamalan
+
