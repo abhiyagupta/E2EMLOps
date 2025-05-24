@@ -51,7 +51,7 @@ if __name__ == "__main__":
             if os.path.isfile(os.path.join(model_store_dir, entry))
         )
         if file_count < 1:
-            s3_bucket = "mybucket-emlo-mumbai"
+            s3_bucket = "abhiya-mlops-project"
             s3_key_prefix = f"kserve-ig/{project}-classifier-prod" 
             download_folder_from_s3(s3_bucket, s3_key_prefix, model_store_dir)
         else:
