@@ -41,3 +41,5 @@ Thsi will deploy trained model in Hugging face spaces via git actions.
 
 7. NOTE: edit the s3 bucket name in gradio_deploy/app.py file to point to your bucket line 34
 
+8. NOTE: use app_2.py, once u delete model and index_to_json from s3 and upload these to HF files directly. 
+
